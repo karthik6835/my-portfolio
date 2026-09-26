@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { 
@@ -7,6 +7,23 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLoadProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setLoading(false), 400);
+          return 100;
+        }
+        return prev + 5;
+      });
+    }, 40);
+    return () => clearInterval(interval);
+  }, []);
+
   const row1Techs = ["Python", "Django", "FastAPI", "React.js", "PostgreSQL", "Docker"];
   const row2Techs = ["AWS", "Tailwind CSS", "Git & GitHub", "Machine Learning", "REST APIs", "Node.js"];
 
@@ -88,7 +105,7 @@ export default function App() {
 
     // --- EMAILJS CONFIGURATION ---
     const serviceID = 'service_d24ndqq'; //[cite: 13]
-    const templateID = 'template_hqphdcv'; //
+    const templateID = 'template_hqphdcv'; //[cite: 19]
     const publicKey = 'eWcrN7mY0jzNHyW4F'; //
 
     const templateParams = {
@@ -107,6 +124,36 @@ export default function App() {
         setStatus({ submitting: false, submitted: true });
       });
   };
+
+  if (loading) {
+    return (
+      <div className="bg-[#0a0a0a] text-white h-screen flex flex-col items-center justify-center font-mono p-6">
+        <div className="max-w-md w-full bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-2xl">
+          <div className="flex items-center justify-between mb-4 border-b border-neutral-800 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <span className="text-xs text-gray-500">// karthik_portfolio_init.sh</span>
+          </div>
+          <p className="text-indigo-400 text-sm mb-2">&gt; Initializing Karthik Suresh Portfolio...</p>
+          <p className="text-gray-400 text-xs mb-6">Loading systems, full-stack modules & runtime environment...</p>
+          
+          <div className="w-full bg-neutral-950 rounded-full h-2.5 mb-4 border border-neutral-800 overflow-hidden">
+            <div 
+              className="bg-indigo-500 h-2.5 rounded-full transition-all duration-75" 
+              style={{ width: `${loadProgress}%` }}
+            ></div>
+          </div>
+          <div className="flex justify-between text-xs text-gray-500">
+            <span>Progress</span>
+            <span className="text-indigo-400 font-bold">{loadProgress}%</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#0a0a0a] text-white min-h-screen font-sans selection:bg-indigo-500 selection:text-white overflow-x-hidden">
@@ -167,7 +214,6 @@ export default function App() {
       {/* 2. SYSTEM PROFILE SECTION WITH HOVER-ONLY GLOW AND TILT */}
       <section className="py-24 px-6 md:px-20 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
         <div className="w-full md:w-2/5 flex justify-center relative perspective-1000 group">
-          {/* Glowing background appears ONLY on hover */}
           <div className="absolute -inset-2 bg-gradient-to-r from-gray-300/30 via-neutral-200/40 to-gray-400/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
 
           <motion.div 
