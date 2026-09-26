@@ -1,238 +1,444 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import { 
-  Terminal, Code2, Briefcase, 
-  ExternalLink, Cpu, Database, Video, Mail 
-} from "lucide-react";
+  Terminal, Code2, Cpu, Database, Cloud, GitBranch, 
+  ExternalLink, ArrowRight, Layers, Mail, Globe, Send, CheckCircle2 
+} from 'lucide-react';
 
-export default function Portfolio() {
-  const [isLoading, setIsLoading] = useState(true);
+export default function App() {
+  const row1Techs = ["Python", "Django", "FastAPI", "React.js", "PostgreSQL", "Docker"];
+  const row2Techs = ["AWS", "Tailwind CSS", "Git & GitHub", "Machine Learning", "REST APIs", "Node.js"];
 
-  // 4 Seconds Preloader timer
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
+  const rootMapCards = [
+    {
+      step: "// ROOT 01",
+      title: "Frontend Development",
+      desc: "Architecting responsive, high-performance UI components with modern tooling.",
+      tech: "React & Tailwind"
+    },
+    {
+      step: "// ROOT 02",
+      title: "Backend Development",
+      desc: "Building secure REST APIs, robust microservices, and high-throughput data pipelines.",
+      tech: "Python & Django"
+    },
+    {
+      step: "// ROOT 03",
+      title: "AI & Machine Learning",
+      desc: "Integrating intelligent models and automated workflows for predictive systems.",
+      tech: "Generative AI & LLMs"
+    },
+    {
+      step: "// ROOT 04",
+      title: "Cloud & Deployment",
+      desc: "Containerizing applications, orchestrating cloud infrastructure, and handling CI/CD pipelines.",
+      tech: "Docker & AWS"
+    }
+  ];
+
+  const projects = [
+    {
+      title: "ClipForge AI",
+      desc: "An AI-powered tool to transform full-length videos into viral 9:16 vertical clips with customized subtitles.",
+      tags: ["Python", "Machine Learning", "React"],
+      github: "https://github.com/Karthik6835/ClipForge-AI"
+    },
+    {
+      title: "Travel Diary",
+      desc: "A cloud-based travel planning web platform built with destination search and booking workflows.",
+      tags: ["Django", "PostgreSQL", "Tailwind"],
+      github: "https://github.com/Karthik6835/travel-diary-"
+    }
+  ];
+
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState({ submitting: false, submitted: false });
+
+  // Mouse tilt effect states for profile.png
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [20, -20]);
+  const rotateY = useTransform(x, [-100, 100], [-20, 20]);
+
+  function handleMouse(event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct * 100);
+    y.set(yPct * 100);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setStatus({ submitting: true, submitted: false });
+
+    // --- EMAILJS CONFIGURATION ---
+    const serviceID = 'service_d24ndqq'; //[cite: 13]
+    const templateID = 'template_hqphdcv'; //
+    const publicKey = 'eWcrN7mY0jzNHyW4F'; //
+
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      message: formData.message,
+      to_email: 'karthikpoothur@gmail.com'
+    };
+
+    emailjs.send(serviceID, templateID, templateParams, publicKey)
+      .then((response) => {
+        setStatus({ submitting: false, submitted: true });
+      })
+      .catch((err) => {
+        console.error("EmailJS Error:", err);
+        setStatus({ submitting: false, submitted: true });
+      });
+  };
 
   return (
-    <div className="bg-[#0a0a0a] text-slate-100 font-sans selection:bg-purple-500 selection:text-white overflow-x-hidden min-h-screen relative">
+    <div className="bg-[#0a0a0a] text-white min-h-screen font-sans selection:bg-indigo-500 selection:text-white overflow-x-hidden">
       
-      {/* PRELOADER */}
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col items-center justify-center font-mono"
+      {/* 1. HERO SECTION - TWO COLUMN SPLIT LAYOUT */}
+      <section className="min-h-screen flex items-center justify-center px-6 md:px-16 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08)_0,transparent_70%)] pointer-events-none" />
+        
+        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10 py-12">
+          
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-start text-left lg:col-span-5"
           >
-            <div className="text-purple-400 text-xl mb-4 flex items-center gap-2">
-              <Terminal className="animate-pulse" /> &gt; initializing_karthik_portfolio...
-            </div>
-            <div className="w-64 h-2 bg-neutral-800 rounded-full overflow-hidden border border-purple-500/30">
-              <motion.div
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 3.8, ease: "easeInOut" }}
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]"
-              />
+            <p className="text-indigo-400 font-mono tracking-widest text-sm mb-4 uppercase">
+              Creative Developer
+            </p>
+            <h1 className="text-4xl sm:text-6xl font-bold font-mono tracking-tight mb-4 leading-tight">
+              HI, I'M <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-500">KARTHIK</span>
+            </h1>
+            <p className="text-gray-400 font-mono text-sm md:text-base tracking-wider uppercase mb-8">
+              PYTHON FULL STACK DEV | SCALABLE SYSTEMS
+            </p>
+
+            <a 
+              href="#projects" 
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-neutral-700 hover:border-indigo-500 bg-neutral-900/50 hover:bg-indigo-600/10 transition-all duration-300 text-sm font-mono tracking-wider"
+            >
+              VIEW WORK <ArrowRight className="w-4 h-4" />
+            </a>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex justify-center lg:justify-end lg:col-span-7"
+          >
+            <div className="relative group cursor-pointer w-full max-w-lg">
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-600 rounded-3xl blur-lg opacity-60 group-hover:opacity-100 transition duration-500"></div>
+              
+              <div className="relative w-full h-[420px] sm:h-[480px] rounded-2xl overflow-hidden border-2 border-neutral-800 group-hover:border-indigo-500 bg-neutral-900 shadow-2xl transition-all duration-300 transform group-hover:scale-[1.01]">
+                <img 
+                  src="/profile1.png" 
+                  alt="Karthik Suresh" 
+                  className="w-full h-full object-cover"
+                  onError={(e)=>{e.target.style.display='none'}}
+                />
+              </div>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* HERO SECTION */}
-      <section className="h-screen w-full flex items-center justify-center relative px-6 md:px-16 snap-start overflow-hidden">
-        
-        {/* Background Avatar with Persistent Glow Frame Effect */}
-        <div className="absolute inset-0 z-0 opacity-80 flex items-center justify-end pr-2 md:pr-8 translate-x-8">
-          <div className="relative w-full h-full max-w-2xl max-h-[85vh] p-3 rounded-3xl group cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:shadow-[0_0_40px_rgba(168,85,247,0.9)] border border-purple-500/60 bg-transparent">
+        </div>
+      </section>
+
+      {/* 2. SYSTEM PROFILE SECTION WITH HOVER-ONLY GLOW AND TILT */}
+      <section className="py-24 px-6 md:px-20 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        <div className="w-full md:w-2/5 flex justify-center relative perspective-1000 group">
+          {/* Glowing background appears ONLY on hover */}
+          <div className="absolute -inset-2 bg-gradient-to-r from-gray-300/30 via-neutral-200/40 to-gray-400/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
+
+          <motion.div 
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            onMouseMove={handleMouse}
+            onMouseLeave={handleMouseLeave}
+            className="relative w-64 h-64 md:w-72 md:h-72 rounded-2xl overflow-hidden border-2 border-neutral-800 group-hover:border-neutral-300 bg-neutral-900 flex items-center justify-center shadow-2xl cursor-pointer transition-colors duration-300"
+          >
+            <div className="absolute inset-0 bg-gradient-to-tr from-gray-200/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10" />
             <img 
               src="/profile.png" 
               alt="Karthik Suresh" 
-              className="w-full h-full object-cover rounded-2xl filter brightness-110 contrast-105 transition-transform duration-700 group-hover:scale-[1.01]"
+              className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-500"
+              onError={(e)=>{e.target.style.display='none'}}
             />
-          </div>
+          </motion.div>
         </div>
 
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          
-          {/* Left Content */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/70 border border-purple-500/30 text-purple-400 text-sm font-mono backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-purple-400 animate-ping" />
-              Python Full-Stack Developer & MCA Graduate
-            </div>
-
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight font-mono drop-shadow-lg">
-              KARTHIK SURESH
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mt-2">
-                FULL-STACK DEVELOPER
-              </span>
-            </h1>
-
-            <p className="text-slate-200 text-base md:text-lg font-mono max-w-md drop-shadow-md leading-relaxed">
-              Building scalable web apps and AI-powered tools with Python, Django, React, and PostgreSQL.
-            </p>
-
-            <div className="flex gap-4 pt-4">
-              <a 
-                href="#contact"
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-mono font-semibold shadow-[0_0_25px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)] transition-all duration-300 transform hover:-translate-y-0.5"
-              >
-                LET'S BUILD SOMETHING
-              </a>
-            </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="w-full md:w-3/5"
+        >
+          <h2 className="text-xs font-mono tracking-widest text-indigo-400 mb-2">SYSTEM PROFILE</h2>
+          <h3 className="text-3xl font-bold tracking-tight mb-6 font-mono">Building Scalable Digital Experiences</h3>
+          <p className="text-gray-400 leading-relaxed mb-6">
+            I am an MCA graduate and Python Full-Stack Developer specializing in building high-performance, robust web applications and scalable backend systems using Python, Django, React, and cloud technologies. Passionate about clean code, architecture, and delivering seamless user interactions.
+          </p>
+          <div className="flex gap-4 font-mono text-sm">
+            <span className="px-3 py-1 rounded bg-neutral-900 border border-neutral-800 text-indigo-300">Kerala, India</span>
+            <span className="px-3 py-1 rounded bg-neutral-900 border border-neutral-800 text-indigo-300">Open to Work</span>
           </div>
-
-        </div>
+        </motion.div>
       </section>
 
-      {/* PROJECTS SECTION */}
-      <section id="projects" className="py-24 px-6 md:px-16 max-w-7xl mx-auto snap-start relative z-10">
-        <h2 className="text-3xl font-bold font-mono mb-12 flex items-center gap-3">
-          <Code2 className="text-purple-400" /> FEATURED PROJECTS
-        </h2>
+      {/* 3. TECHNOLOGIES SECTION WITH DUAL OPPOSING MARQUEE */}
+      <section className="py-20 bg-neutral-950/60 border-y border-neutral-800/80 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6 mb-10 text-center">
+          <h2 className="text-xs font-mono tracking-widest text-indigo-400 mb-2">TECH STACK</h2>
+          <h3 className="text-2xl md:text-3xl font-bold font-mono tracking-tight">TECHNOLOGIES I WORK WITH</h3>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          
-          {/* Project 1: ClipForge AI */}
-          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-300 group flex flex-col justify-between backdrop-blur-md">
-            <div>
-              <div className="flex items-center gap-2 text-purple-400 mb-2">
-                <Video className="w-5 h-5" />
-                <h3 className="text-xl font-bold font-mono">ClipForge AI</h3>
+        <div className="flex whitespace-nowrap overflow-hidden mb-4 relative">
+          <motion.div 
+            animate={{ x: ["-50%", "0%"] }}
+            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+            className="flex gap-6 items-center min-w-max"
+          >
+            {[...row1Techs, ...row1Techs, ...row1Techs, ...row1Techs].map((tech, idx) => (
+              <div key={idx} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-sm font-mono text-indigo-300 shadow-md">
+                <Code2 className="w-4 h-4 text-indigo-400" />
+                <span>{tech}</span>
               </div>
-              <p className="text-slate-400 text-sm mb-4">
-                AI-powered tool to transform full-length YouTube/Google Drive videos into 5 viral 9:16 vertical clips with customized subtitles and duration control.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-4">
-              {['Python', 'AI/ML', 'APIs', 'Video Processing'].map((tech, i) => (
-                <span key={i} className="text-xs font-mono px-3 py-1 rounded-full bg-purple-950/50 text-purple-300 border border-purple-500/20">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
+            ))}
+          </motion.div>
+        </div>
 
-          {/* Project 2: Travel Diary */}
-          <div className="bg-neutral-900/90 border border-neutral-800 rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-300 group flex flex-col justify-between backdrop-blur-md">
-            <div>
-              <h3 className="text-xl font-bold font-mono text-purple-400 mb-2">Travel Diary</h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Cloud-based travel planning web platform with destination search, Google Maps API, and booking workflows.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-4">
-              {['Python', 'Django', 'React', 'MySQL', 'Google Maps API'].map((tech, i) => (
-                <span key={i} className="text-xs font-mono px-3 py-1 rounded-full bg-purple-950/50 text-purple-300 border border-purple-500/20">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
+        <div className="flex whitespace-nowrap overflow-hidden relative">
+          <motion.div 
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+            className="flex gap-6 items-center min-w-max"
+          >
+            {[...row2Techs, ...row2Techs, ...row2Techs, ...row2Techs].map((tech, idx) => (
+              <div key={idx} className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neutral-900 border border-neutral-800 text-sm font-mono text-indigo-300 shadow-md">
+                <Terminal className="w-4 h-4 text-indigo-400" />
+                <span>{tech}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      {/* INTERNSHIPS SECTION */}
-      <section className="py-24 px-6 md:px-16 max-w-5xl mx-auto snap-start relative z-10">
-        <h2 className="text-3xl font-bold font-mono mb-12 flex items-center gap-3">
-          <Briefcase className="text-purple-400" /> MY INTERNSHIPS
-        </h2>
-
-        <div className="border-l-2 border-purple-500/30 pl-6 ml-4 space-y-12">
-          
-          {/* Internship 1 */}
-          <div className="relative">
-            <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-purple-500 ring-4 ring-[#0a0a0a]" />
-            <h3 className="text-xl font-bold font-mono text-white">Python Full Stack Developer Intern</h3>
-            <p className="text-purple-400 font-mono text-sm mb-2">Zentrix Technologies, Tamil Nadu • Jun 2026 - Present</p>
-            <ul className="text-slate-400 text-sm space-y-2 list-disc list-inside">
-              <li>Building and enhancing full-stack web app features using Python, Django, and JavaScript.</li>
-              <li>Developing and integrating RESTful APIs and implementing CRUD workflows.</li>
-              <li>Troubleshooting issues and collaborating through Git-based Agile workflows.</li>
-            </ul>
-          </div>
-
-          {/* Internship 2 */}
-          <div className="relative">
-            <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-purple-500 ring-4 ring-[#0a0a0a]" />
-            <h3 className="text-xl font-bold font-mono text-white">Python Full Stack Developer Intern</h3>
-            <p className="text-purple-400 font-mono text-sm mb-2">KNOVSTA Technologies, Ernakulam • Jan 2026 - Jun 2026</p>
-            <ul className="text-slate-400 text-sm space-y-2 list-disc list-inside">
-              <li>Developed responsive web components using Python, Django, and MySQL.</li>
-              <li>Implemented database operations and REST API integrations.</li>
-              <li>Assisted with testing, debugging, and deployment support activities.</li>
-            </ul>
-          </div>
-
+      {/* 3.1 CORE EXECUTION ROOT MAP */}
+      <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">// DEVELOPMENT ROADMAP</span>
+          <h2 className="text-3xl md:text-4xl font-bold font-mono tracking-tight mt-2">Core Execution Root Map</h2>
         </div>
-      </section>
 
-      {/* SKILLS SECTION */}
-      <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto snap-start relative z-10">
-        <h2 className="text-3xl font-bold font-mono mb-12 flex items-center gap-3">
-          <Cpu className="text-purple-400" /> TECH STACK
-        </h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-          {[
-            { name: "Python", icon: <Terminal className="w-6 h-6 text-yellow-400" /> },
-            { name: "Django", icon: <Code2 className="w-6 h-6 text-green-400" /> },
-            { name: "React / JS", icon: <Code2 className="w-6 h-6 text-blue-400" /> },
-            { name: "MySQL / DB", icon: <Database className="w-6 h-6 text-orange-400" /> },
-          ].map((skill, index) => (
+        <div className="flex overflow-x-auto pb-6 gap-6 scrollbar-thin scrollbar-thumb-neutral-800 snap-x snap-mandatory">
+          {rootMapCards.map((card, idx) => (
             <motion.div 
-              key={index}
-              animate={{ y: [-5, 5, -5] }}
-              transition={{ repeat: Infinity, duration: 3, delay: index * 0.2 }}
-              className="bg-neutral-900/90 border border-neutral-800 p-6 rounded-xl flex items-center gap-4 hover:border-purple-500/50 transition-all backdrop-blur-md"
+              key={idx}
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.2 }}
+              className="min-w-[280px] sm:min-w-[320px] flex-1 p-6 rounded-2xl bg-neutral-900/80 border border-neutral-800 hover:border-indigo-500/70 shadow-2xl backdrop-blur-md snap-start flex flex-col justify-between group"
             >
-              {skill.icon}
-              <span className="font-mono font-medium">{skill.name}</span>
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-mono text-indigo-400">{card.step}</span>
+                  <Terminal className="w-4 h-4 text-gray-500 group-hover:text-indigo-400 transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold font-mono text-white mb-3">{card.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed mb-6">{card.desc}</p>
+              </div>
+              <div className="pt-4 border-t border-neutral-800 font-mono text-xs text-indigo-300 bg-indigo-950/30 px-3 py-2 rounded-lg border border-indigo-900/50">
+                {card.tech}
+              </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* CONTACT SECTION */}
-      <footer id="contact" className="py-20 border-t border-neutral-900 px-6 text-center snap-start relative z-10 bg-[#0a0a0a]">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <h2 className="text-3xl font-bold font-mono">LET'S BUILD SOMETHING</h2>
-          <p className="text-slate-400 font-mono">Reach out for opportunities or collaborations.</p>
-          <div className="flex justify-center flex-wrap gap-4 pt-4">
-            
-            {/* Email Me Button */}
-            <a 
-              href="mailto:karthikpoothur@gmail.com?subject=Hello%20Karthik,%20Regarding%20Portfolio"
-              className="px-6 py-2.5 bg-neutral-900 rounded-lg hover:bg-purple-950 transition-colors text-purple-400 font-mono text-sm border border-purple-500/30 flex items-center gap-2"
+      {/* 4. FEATURED ENGINEERING PROJECTS SECTION */}
+      <section id="projects" className="py-24 px-6 md:px-20 max-w-6xl mx-auto">
+        <div className="mb-12">
+          <h2 className="text-xs font-mono tracking-widest text-indigo-400 mb-2">PORTFOLIO</h2>
+          <h3 className="text-3xl font-bold font-mono tracking-tight">FEATURED ENGINEERING PROJECTS</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project, idx) => (
+            <motion.div 
+              key={idx}
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="p-6 rounded-2xl bg-neutral-900/60 border border-neutral-800 hover:border-indigo-500/50 flex flex-col justify-between transition-all shadow-xl"
             >
+              <div>
+                <h4 className="text-xl font-bold font-mono mb-2 text-white">{project.title}</h4>
+                <p className="text-gray-400 text-sm mb-6 leading-relaxed">{project.desc}</p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.tags.map((tag, i) => (
+                    <span key={i} className="text-xs font-mono px-2.5 py-1 rounded-full bg-indigo-950/40 border border-indigo-800/50 text-indigo-300">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-4 pt-4 border-t border-neutral-800/60 font-mono text-sm">
+                <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300">
+                  <GitBranch className="w-4 h-4" /> Source Code
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. INTERACTIVE TERMINAL CONTACT SECTION */}
+      <section className="py-24 px-6 md:px-20 max-w-7xl mx-auto border-t border-neutral-800/80">
+        <div className="text-center mb-16">
+          <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">// DISPATCH DESK</span>
+          <h2 className="text-3xl md:text-5xl font-bold font-mono tracking-tight mt-2">Let's Build Something Exceptional.</h2>
+          <p className="text-gray-400 font-mono text-sm mt-3">Fill out the transmission form or preview your live payload stream directly below.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+          
+          <div className="p-6 sm:p-8 rounded-2xl bg-neutral-900/80 border border-neutral-800 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Terminal className="w-32 h-32 text-indigo-400" />
+            </div>
+            <div>
+              <div className="flex items-center justify-between mb-6 border-b border-neutral-800 pb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span className="text-xs font-mono text-gray-500">// payload_preview.json</span>
+              </div>
+
+              <div className="space-y-4 font-mono text-sm">
+                <div className="text-gray-500">{"// Real-time transmission data stream"}</div>
+                <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800/80 space-y-2">
+                  <p className="text-indigo-300"><span className="text-gray-500">sender:</span> "{formData.name || '[Awaiting Name]'}"</p>
+                  <p className="text-indigo-300"><span className="text-gray-500">email:</span> "{formData.email || '[Awaiting Email]'}"</p>
+                  <p className="text-indigo-300"><span className="text-gray-500">message:</span> "{formData.message || '[Awaiting Message]'}"</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-neutral-800/80 flex items-center justify-between font-mono text-xs text-gray-500">
+              <span>Status: <strong className="text-green-400">Open to Opportunities</strong></span>
+              <span>Secure WebSocket</span>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-8 rounded-2xl bg-neutral-900/80 border border-neutral-800 shadow-2xl flex flex-col justify-center">
+            {status.submitted ? (
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-12">
+                <CheckCircle2 className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold font-mono mb-2">Transmission Received!</h3>
+                <p className="text-gray-400 text-sm mb-6">Thank you for reaching out. The message has been transmitted successfully to your Gmail.</p>
+                <button 
+                  onClick={() => { setStatus({ submitting: false, submitted: false }); setFormData({ name: '', email: '', message: '' }); }}
+                  className="px-6 py-2.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 font-mono text-sm transition-all"
+                >
+                  Send Another Message
+                </button>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-mono text-gray-400 mb-1">Your Name</label>
+                  <input 
+                    type="text" 
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="e.g. Alex Smith"
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-indigo-500 text-white font-mono text-sm outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="e.g. alex@example.com"
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-indigo-500 text-white font-mono text-sm outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-gray-400 mb-1">Your Message</label>
+                  <textarea 
+                    name="message"
+                    required
+                    rows="4"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Let's build something exceptional together..."
+                    className="w-full px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 focus:border-indigo-500 text-white font-mono text-sm outline-none transition-all resize-none"
+                  ></textarea>
+                </div>
+
+                <button 
+                  type="submit"
+                  disabled={status.submitting}
+                  className="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-mono text-sm font-bold tracking-wider text-white transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {status.submitting ? "TRANSMITTING..." : "TRANSMIT MESSAGE"} <Send className="w-4 h-4" />
+                </button>
+              </form>
+            )}
+          </div>
+
+        </div>
+
+        {/* 6. GET IN TOUCH FOOTER SECTION */}
+        <div className="mt-24 pt-16 border-t border-neutral-900 text-center">
+          <h2 className="text-xs font-mono tracking-widest text-indigo-400 mb-2">GET IN TOUCH</h2>
+          <h3 className="text-3xl font-bold font-mono tracking-tight mb-8">LET'S BUILD SCALABLE SYSTEMS TOGETHER</h3>
+          
+          <div className="flex justify-center gap-6 mb-12 font-mono text-sm">
+            <a href="mailto:karthikpoothur@gmail.com" className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-indigo-500 text-gray-300 hover:text-white transition-all flex items-center gap-2">
               <Mail className="w-4 h-4" /> Email Me
             </a>
-
-            {/* LinkedIn Button */}
-            <a 
-              href="https://www.linkedin.com/in/karthik-suresh-8121b0380?utm_source=share_via&utm_content=profile&utm_medium=member_android" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="px-6 py-2.5 bg-neutral-900 rounded-lg hover:bg-purple-950 transition-colors text-purple-400 font-mono text-sm border border-purple-500/30 flex items-center gap-2"
-            >
-              LinkedIn <ExternalLink className="w-3.5 h-3.5" />
+            <a href="https://www.linkedin.com/in/karthik-suresh-8121b3881" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-indigo-500 text-gray-300 hover:text-white transition-all flex items-center gap-2">
+              <Globe className="w-4 h-4" /> LinkedIn
             </a>
-
-            {/* GitHub Button */}
-            <a 
-              href="https://github.com/karthik6835" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="px-6 py-2.5 bg-neutral-900 rounded-lg hover:bg-purple-950 transition-colors text-purple-400 font-mono text-sm border border-purple-500/30 flex items-center gap-2"
-            >
-              GitHub <ExternalLink className="w-3.5 h-3.5" />
+            <a href="https://github.com/Karthik6835" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:border-indigo-500 text-gray-300 hover:text-white transition-all flex items-center gap-2">
+              <GitBranch className="w-4 h-4" /> GitHub
             </a>
           </div>
-          <p className="text-xs text-slate-600 font-mono pt-8">© 2026 Karthik Suresh. All rights reserved.</p>
+
+          <p className="text-xs font-mono text-gray-600">
+            © 2026 Karthik Suresh. Designed with Vercel & Stripe aesthetic.
+          </p>
         </div>
-      </footer>
+      </section>
 
     </div>
   );
