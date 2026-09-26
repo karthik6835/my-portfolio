@@ -18,7 +18,7 @@ Welcome to the source code of my personal full-stack developer portfolio! This p
 ---
 
 ### 🌐 Live Preview
-You can check out the live version of my portfolio here: *(നിങ്ങളുടെ വെബ്‌സൈറ്റ് Vercel-ൽ ഹോസ്റ്റ് ചെയ്തു കഴിയുമ്പോൾ കിട്ടുന്ന ലിങ്ക് ഇവിടെ നൽകുക)*
+* **[Click Here to View My Portfolio](https://my-portfolio-belge-zeta-psc5pyuehw.vercel.app)**
 
 ---
 
