@@ -1,16 +1,31 @@
-# React + Vite
+# 🚀 Karthik Suresh - Professional Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Welcome to the source code of my personal full-stack developer portfolio! This project is built to showcase my skills, projects, and professional journey as an MCA graduate and Python Full-Stack Developer.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### 🛠️ Tech Stack & Tools
+* **Frontend:** React.js, Tailwind CSS, Framer Motion, Lucide Icons
+* **Backend Concepts:** Python, Django, REST APIs, PostgreSQL, MySQL
+* **Tools & Deployment:** Git, GitHub, Vercel, Vite
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📂 Featured Projects in this Portfolio
+1. **ClipForge AI** - An AI-powered tool to transform full-length videos into viral 9:16 vertical clips with customized subtitles.
+2. **Travel Diary** - A cloud-based travel planning web platform built with destination search and booking workflows.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### 🌐 Live Preview
+You can check out the live version of my portfolio here: *(നിങ്ങളുടെ വെബ്‌സൈറ്റ് Vercel-ൽ ഹോസ്റ്റ് ചെയ്തു കഴിയുമ്പോൾ കിട്ടുന്ന ലിങ്ക് ഇവിടെ നൽകുക)*
+
+---
+
+### 📬 Connect with Me
+* **Email:** karthikpoothur@gmail.com
+* **LinkedIn:** [Karthik Suresh](https://www.linkedin.com/in/karthik-suresh-8121b0380)
+* **GitHub:** [Karthik6835](https://github.com/Karthik6835)
+
+---
+© 2026 Karthik Suresh. All rights reserved.
