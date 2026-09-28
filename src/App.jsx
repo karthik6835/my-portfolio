@@ -56,6 +56,13 @@ export default function App() {
 
   const projects = [
     {
+      title: "InviteLuxe - AI Digital Invitations",
+      desc: "A modern full-stack web application to create, manage, and share stunning digital invitations with custom templates and Supabase backend.",
+      tags: ["React", "Vite", "Tailwind CSS", "Supabase"],
+      github: "https://github.com/Karthik6835/Invitation-project",
+      hasCode: true
+    },
+    {
       title: "ClipForge AI",
       desc: "An AI-powered tool to transform full-length videos into viral 9:16 vertical clips with customized subtitles.",
       tags: ["Python", "Machine Learning", "React"],
@@ -118,9 +125,9 @@ export default function App() {
     setStatus({ submitting: true, submitted: false });
 
     // --- EMAILJS CONFIGURATION ---
-    const serviceID = 'service_d24ndqq';
-    const templateID = 'template_hqphdcv';
-    const publicKey = 'eWcrN7mY0jzNHyW4F';
+    const serviceID = 'service_d24ndqq'; //[cite: 13]
+    const templateID = 'template_hqphdcv'; //
+    const publicKey = 'eWcrN7mY0jzNHyW4F'; //
 
     const templateParams = {
       from_name: formData.name,
