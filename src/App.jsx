@@ -58,7 +58,7 @@ export default function App() {
     {
       title: "InviteLuxe - AI Digital Invitations",
       desc: "A modern full-stack web application to create, manage, and share stunning digital invitations with custom templates and Supabase backend.",
-      tags: ["React", "Vite", "Tailwind CSS", "Supabase"],
+      tags: ["React", "Vite", "Tailwind CSS"],
       github: "https://github.com/Karthik6835/Invitation-project",
       hasCode: true
     },
@@ -77,15 +77,15 @@ export default function App() {
       hasCode: true
     },
     {
-      title: "MCA Academic Project 01",
-      desc: "An advanced web application developed during MCA studies focusing on robust database management and user workflows.",
-      tags: ["Python", "Django", "MySQL"],
+      title: "Online Aptitude Test Application",
+      desc: "A web-based platform designed to conduct online examinations and technical aptitude assessments with automated result evaluation and secure user authentication.",
+      tags: ["PHP", "MySQL", "HTML"],
       hasCode: false
     },
     {
-      title: "MCA Academic Project 02",
-      desc: "A full-stack software system built with modern web technologies, emphasizing clean architecture and responsive UI.",
-      tags: ["React", "JavaScript", "REST APIs"],
+      title: "Fuel Delivery Management System",
+      desc: "An efficient online service platform enabling users to request and manage doorstep fuel deliveries with automated order tracking and administrative management.",
+      tags: ["PHP", "MySQL", "HTML"],
       hasCode: false
     }
   ];
