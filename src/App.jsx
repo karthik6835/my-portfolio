@@ -59,13 +59,27 @@ export default function App() {
       title: "ClipForge AI",
       desc: "An AI-powered tool to transform full-length videos into viral 9:16 vertical clips with customized subtitles.",
       tags: ["Python", "Machine Learning", "React"],
-      github: "https://github.com/Karthik6835/ClipForge-AI"
+      github: "https://github.com/Karthik6835/ClipForge-AI",
+      hasCode: true
     },
     {
       title: "Travel Diary",
       desc: "A cloud-based travel planning web platform built with destination search and booking workflows.",
       tags: ["Django", "PostgreSQL", "Tailwind"],
-      github: "https://github.com/Karthik6835/travel-diary-"
+      github: "https://github.com/Karthik6835/travel-diary-",
+      hasCode: true
+    },
+    {
+      title: "MCA Academic Project 01",
+      desc: "An advanced web application developed during MCA studies focusing on robust database management and user workflows.",
+      tags: ["Python", "Django", "MySQL"],
+      hasCode: false
+    },
+    {
+      title: "MCA Academic Project 02",
+      desc: "A full-stack software system built with modern web technologies, emphasizing clean architecture and responsive UI.",
+      tags: ["React", "JavaScript", "REST APIs"],
+      hasCode: false
     }
   ];
 
@@ -104,9 +118,9 @@ export default function App() {
     setStatus({ submitting: true, submitted: false });
 
     // --- EMAILJS CONFIGURATION ---
-    const serviceID = 'service_d24ndqq'; //[cite: 13]
-    const templateID = 'template_hqphdcv'; //[cite: 19]
-    const publicKey = 'eWcrN7mY0jzNHyW4F'; //
+    const serviceID = 'service_d24ndqq';
+    const templateID = 'template_hqphdcv';
+    const publicKey = 'eWcrN7mY0jzNHyW4F';
 
     const templateParams = {
       from_name: formData.name,
@@ -347,9 +361,13 @@ export default function App() {
                 </div>
               </div>
               <div className="flex items-center gap-4 pt-4 border-t border-neutral-800/60 font-mono text-sm">
-                <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300">
-                  <GitBranch className="w-4 h-4" /> Source Code
-                </a>
+                {project.hasCode ? (
+                  <a href={project.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300">
+                    <GitBranch className="w-4 h-4" /> Source Code
+                  </a>
+                ) : (
+                  <span className="text-xs font-mono text-gray-500 italic">Academic / Private Project</span>
+                )}
               </div>
             </motion.div>
           ))}
